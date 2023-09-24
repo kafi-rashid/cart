@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Homepage of Shopping Cart Project">
+        <meta name="keywords" content="HTML, CSS, WAP">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="assets/css/styles.css" type="text/css" rel="stylesheet">
+        <title>Maaler Arot</title>
+    </head>
+    <body>
+        <div id="header">
+            <p class="logo"><span>Maaler</span>Arot</p>
+            <div id="login" class="d-none">
+                <input type="text" id="login-username" placeholder="Username">
+                <input type="password" id="login-password" placeholder="Password">
+                <button id="login-button" onclick="login()">Log In</button>
+            </div>
+            <div id="welcome" class="d-none">
+                <div>
+                    <p>Welcome, <span id="greeting-user"></span></p>
+                    <button id="logout-button" onclick="logout()">Log Out</button>
+                </div>
+            </div>
+        </div>
+        <div id="content">
+            <div id="welcome-container" class="d-none center">
+                <p>Welcome to</p>
+                <p class="heading">Maaler Arot!</p>
+                <img src="./assets/images/banner.png">
+            </div>
+
+            <div id="products-container" class="d-none">
+                <div id="product-list" class="mb-3">
+                    <p class="title mb-3">Products Available</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th class="width-100">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-rows">
+                            <tr>
+                                <td colspan="4" class="text-center">Loading products...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div id="shopping-cart" class="mt-4">
+                    <p class="title mb-3">Shopping Cart</p>
+                    <p id="cart-empty">There is no item in your shopping cart! Add one to continue.</p>
+                    <div id="cart-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                    <th class="width-100">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-rows">
+                                <tr>
+                                    <td colspan="4" class="text-center">Loading products...</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <p class="text-right font-weight-bold">TOTAL: <span id="total-amount">0.00</span></p>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="text-right">
+                            <button class="mt-4" id="place-order" onclick="placeOrder()">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="footer">
+            <p>Developed for Web Application Programming Course</p>
+            <p>No Copyright, No Right Reserved</p>
+        </div>
+    </body>
+    <script src="./assets/js/index.js"></script>
+</html>
