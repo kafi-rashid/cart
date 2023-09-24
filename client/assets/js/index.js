@@ -4,19 +4,11 @@ let totalAmount = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
     isLoggedIn();
-});
 
-function fetchProducts() {
-    fetch('http://localhost:3000/products', {
-        headers: {
-            "Authorization": "Basic"
-        }
-    }).then(response => response.json())
-    .then(data => {
-        if (data && data.length > 0) {
-            products = data;
-            renderProducts();
-        }
+    const form = document.getElementById("login-form");
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        login(form);
     });
 
     document.addEventListener('click', function(event) {
@@ -24,17 +16,32 @@ function fetchProducts() {
             const productId = event.target.getAttribute('data-product-id');
             addToCart(productId);
         }
-        
         if (event.target.classList.contains('cart-dec-button')) {
             const productId = event.target.getAttribute('data-product-id');
             removeFromCart(productId);
         }
-
         if (event.target.classList.contains('cart-inc-button')) {
             const productId = event.target.getAttribute('data-product-id');
             addToCart(productId);
         }
     });
+});
+
+function fetchProducts() {
+    let user = sessionStorage.getItem("user");
+    if (user) {  
+        fetch('http://localhost:3000/products', {
+            headers: {
+                "Authorization": "Basic " + JSON.parse(user).token
+            }
+        }).then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                products = data;
+                renderProducts();
+            }
+        });
+    }
 }
 
 function isLoggedIn() {
@@ -56,34 +63,34 @@ function isLoggedIn() {
     }
 }
 
-function login() {
-    let username = document.getElementById("login-username").value;
-    let password = document.getElementById("login-password").value;
-    let user = {
-        username: username.toLowerCase(),
-        password: password
+function login(form) {
+    let username = form.elements["username"].value;
+    let password = form.elements["password"].value;
+    if (username.trim().length > 0 && password.trim().length > 0) {
+        fetch('http://localhost:3000/auth', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username.toLowerCase(),
+                password: password
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                alert("Invalid username or password!");
+            }
+        })
+        .then(data => {
+            if (data && data.hasOwnProperty("token")) {
+                form.reset();
+                sessionStorage.setItem("user", JSON.stringify(data));
+                isLoggedIn();
+            }
+        });
     }
-    fetch('http://localhost:3000/auth', {
-        method: 'POST',
-        body: JSON.stringify(user),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(response => {
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            alert("Invalid username or password!");
-        }
-    })
-    .then(data => {
-        if (data && data.hasOwnProperty("token")) {
-            document.getElementById("login-username").value = "";
-            document.getElementById("login-password").value = "";
-            sessionStorage.setItem("user", JSON.stringify(data));
-            isLoggedIn();
-        }
-    });
 }
 
 function logout() {
@@ -194,6 +201,7 @@ function placeOrder() {
         }
     });
     cart = [];
+    alert("Order has been placed! Thank you.")
     renderProducts();
     renderCart();
 }

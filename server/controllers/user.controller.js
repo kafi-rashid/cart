@@ -1,17 +1,20 @@
 const User = require("../models/user.model");
+let status = 200;
+let message = {};
 
 const login = function(req, res) {
-    let reqBody = req.body;
-
-    console.log(reqBody);
-    let user = User.login(reqBody.username, reqBody.password);
+    const reqBody = req.body;
+    const user = User.login(reqBody.username, reqBody.password);
     if (user) {
-        res.status(200).json(user);
+        status = 200;;
+        message = user;
     } else {
-        res.status(403).json({
+        status = 403;
+        message = {
             message: "Invalid username or password!"
-        });
+        }
     }
+    res.status(status).json(message);
 }
 
 module.exports = {

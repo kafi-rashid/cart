@@ -1,33 +1,41 @@
 const Product = require("../models/product.model");
+let status = 200;
+let message = {};
 
 const getAll = function(req, res) {
     res.status(200).json(Product.getAll());
 }
 
 const getById = function(req, res) {
-    let productId = req.params.productId;
-    let product = Product.getById(productId);
+    const productId = req.params.productId;
+    const product = Product.getById(productId);
     if (product) {
-        res.status(200).json(product);
+        status = 200;
+        message = product;
     } else {
-        res.status(404).json({
+        status = 404;
+        message = {
             message: "No product found with ID " + productId
-        });
+        }
     }
+    res.status(status).json(message);
 }
 
 const deleteById = function(req, res) {
-    let productId = req.params.productId;
-    let isDeleted = Product.deleteById(productId);
+    const productId = req.params.productId;
+    const isDeleted = Product.deleteById(productId);
     if (isDeleted) {
-        res.status(200).json({
+        status = 200;
+        message = {
             message: "Product has been deleted!"
-        });
+        };
     } else {
-        res.status(404).json({
+        status = 404;
+        message = {
             message: "Product with ID " + productId + " can not be deleted!"
-        });
+        };
     }
+    res.status(status).json(message);
 }
 
 module.exports = {
