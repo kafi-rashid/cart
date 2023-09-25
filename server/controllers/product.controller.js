@@ -3,7 +3,14 @@ let status = 200;
 let message = {};
 
 const getAll = function(req, res) {
-    res.status(200).json(Product.getAll());
+    const token = req.get("Authorization");
+    if (token) {
+        res.status(200).json(Product.getAll());
+    } else {
+        res.status(403).json({
+            message: "Token is missing from Authorization Header"
+        });
+    }
 }
 
 const getById = function(req, res) {

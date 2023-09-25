@@ -32,7 +32,7 @@ function fetchProducts() {
     if (user) {  
         fetch('http://localhost:3000/products', {
             headers: {
-                "Authorization": "Basic " + JSON.parse(user).token
+                "Authorization": JSON.parse(user).token
             }
         }).then(response => response.json())
         .then(data => {
@@ -137,12 +137,12 @@ function addToCart(productId) {
             addProduct["total"] = addProduct.price * addProduct.quantity;
             cart.push(addProduct);
         }
+        sessionStorage.setItem("cart", JSON.stringify(cart));
         renderCart();
     }
 }
 
 function removeFromCart(productId) {
-    let product = products.find(prod => prod.id === parseInt(productId));
     let alreadyAdded = cart.find(prod => prod.id === parseInt(productId));
     if (alreadyAdded) {
         if (alreadyAdded.quantity === 1) {
@@ -152,10 +152,15 @@ function removeFromCart(productId) {
             alreadyAdded.total = alreadyAdded.price * alreadyAdded.quantity;    
         }
     }
+    sessionStorage.setItem("cart", JSON.stringify(cart));
     renderCart();
 }
 
 function renderCart() {
+    let storedCart = sessionStorage.getItem("cart");
+    if (storedCart) {
+        cart = JSON.parse(storedCart);
+    }
     totalAmount = 0;
     if (cart && cart.length > 0) {
         document.getElementById("cart-table").classList.remove("d-none");
@@ -193,7 +198,6 @@ function renderCart() {
 }
 
 function placeOrder() {
-    console.log(cart);
     cart.forEach(prod => {
         let product = products.find(p => p.id === parseInt(prod.id));
         if (product) {
@@ -201,7 +205,8 @@ function placeOrder() {
         }
     });
     cart = [];
-    alert("Order has been placed! Thank you.")
+    alert("Order has been placed! Thank you.");
+    sessionStorage.removeItem("cart");
     renderProducts();
     renderCart();
 }
