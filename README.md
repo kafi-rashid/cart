@@ -10,3 +10,10 @@ This repository contains a Node.js application (app.js) that you can run as a se
    node app.js or nodemon app.js
 
 2. Then open client/index.html in the browser
+3. Log in with the following username and password:
+
+    ```javascript
+    username: kafi
+    password: 1234
+    username: john
+    password: 1234
