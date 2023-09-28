@@ -44,6 +44,18 @@ function fetchProducts() {
     }
 }
 
+function getUserId() {
+    let user = sessionStorage.getItem("user");
+    if (user) {
+        let userJson = JSON.parse(user);
+        if (userJson && userJson.user.id) {
+            return userJson.user.id;
+        }
+        return null;
+    }
+    return null;
+}
+
 function isLoggedIn() {
     let user = sessionStorage.getItem("user");
     if (user) {
@@ -56,6 +68,7 @@ function isLoggedIn() {
         renderCart();
     } else {
         document.getElementById("login").classList.remove("d-none");
+        document.getElementById("autofocus").focus();
         document.getElementById("welcome").classList.add("d-none");
         document.getElementById("welcome-container").classList.toggle("d-none")
         document.getElementById("welcome-container").classList.add("center");
@@ -94,7 +107,7 @@ function login(form) {
 }
 
 function logout() {
-    sessionStorage.clear();
+    sessionStorage.removeItem("user");
     isLoggedIn();
 }
 
@@ -137,7 +150,7 @@ function addToCart(productId) {
             addProduct["total"] = addProduct.price * addProduct.quantity;
             cart.push(addProduct);
         }
-        sessionStorage.setItem("cart", JSON.stringify(cart));
+        sessionStorage.setItem("cart" + getUserId(), JSON.stringify(cart));
         renderCart();
     }
 }
@@ -152,12 +165,12 @@ function removeFromCart(productId) {
             alreadyAdded.total = alreadyAdded.price * alreadyAdded.quantity;    
         }
     }
-    sessionStorage.setItem("cart", JSON.stringify(cart));
+    sessionStorage.setItem("cart" + getUserId(), JSON.stringify(cart));
     renderCart();
 }
 
 function renderCart() {
-    let storedCart = sessionStorage.getItem("cart");
+    let storedCart = sessionStorage.getItem("cart" + getUserId());
     if (storedCart) {
         cart = JSON.parse(storedCart);
     }
@@ -206,7 +219,7 @@ function placeOrder() {
     });
     cart = [];
     alert("Order has been placed! Thank you.");
-    sessionStorage.removeItem("cart");
+    sessionStorage.removeItem("cart" + getUserId());
     renderProducts();
     renderCart();
 }
